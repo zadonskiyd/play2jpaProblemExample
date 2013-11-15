@@ -1,13 +1,17 @@
 package controllers;
 
+import play.libs.F;
 import play.mvc.*;
 import play.data.*;
 import static play.data.Form.*;
+import static play.libs.F.Promise.promise;
+
 import play.db.jpa.*;
 
 import views.html.*;
 
 import models.*;
+import views.html.list;
 
 /**
  * Manage a database of computers
@@ -38,14 +42,28 @@ public class Application extends Controller {
      */
     @Transactional(readOnly=true)
     public static Result list(int page, String sortBy, String order, String filter) {
+        F.Promise<String> helloPromise = promise(new F.Function0<String>() {
+            @Override
+            public String apply() throws Throwable {
+                return JPA.withTransaction(new F.Function0<String>() {
+                    @Override
+                    public String apply() throws Throwable {
+                        return "hello";
+                    }
+                });
+            }
+        });
+        String hello = helloPromise.get(1000);
         return ok(
             list.render(
-                Computer.page(page, 10, sortBy, order, filter),
-                sortBy, order, filter
+                    Computer.page(page, 10, sortBy, order, filter),
+                    sortBy, order, filter
             )
         );
     }
-    
+
+
+
     /**
      * Display the 'edit form' of a existing Computer.
      *
