@@ -4,7 +4,7 @@ play2jpaProblemExample
 Example for play 2 jpa problem
 
 Usage
-* dowload play 2.2.1
+* download play 2.2.1
 * clone this repo
 * play clean run
 * open browser: http://localhost:9000
