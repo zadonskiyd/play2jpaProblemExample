@@ -42,18 +42,18 @@ public class Application extends Controller {
      */
     @Transactional(readOnly=true)
     public static Result list(int page, String sortBy, String order, String filter) {
-        F.Promise<String> helloPromise = promise(new F.Function0<String>() {
-            @Override
-            public String apply() throws Throwable {
-                return JPA.withTransaction(new F.Function0<String>() {
-                    @Override
-                    public String apply() throws Throwable {
-                        return "hello";
-                    }
-                });
-            }
-        });
-        String hello = helloPromise.get(1000);
+        try {
+            F.Promise<String> helloPromise = JPA.withTransactionAsync(new F.Function0<F.Promise<String>>() {
+                @Override
+                public F.Promise<String> apply() throws Throwable {
+                    return null;
+                }
+            });
+            String hello = helloPromise.get(1000);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        JPA.em();
         return ok(
             list.render(
                     Computer.page(page, 10, sortBy, order, filter),
